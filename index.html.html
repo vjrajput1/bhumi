@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Bhumi, My Stars & My Universe</title>
+    <!-- Tailwind CSS for modern utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium serif typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cursive: ['"Great Vibes"', 'serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        cosmic: {
+                            50: '#f4f4fa',
+                            100: '#eae9f5',
+                            500: '#635bff',
+                            800: '#1a1235',
+                            900: '#0b061d',
+                            950: '#05020c',
+                        },
+                        gold: {
+                            400: '#f6d365',
+                            500: '#d4af37',
+                            600: '#b89222',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'sparkle': 'sparkle 1.5s ease-in-out infinite',
+                        'star-pulse': 'starPulse 2s infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        sparkle: {
+                            '0%, 100%': { opacity: '0.3', transform: 'scale(0.8)' },
+                            '50%': { opacity: '1', transform: 'scale(1.2)' },
+                        },
+                        starPulse: {
+                            '0%': { transform: 'scale(1) translateY(0px)', boxShadow: '0 0 10px rgba(212, 175, 55, 0.5)' },
+                            '100%': { transform: 'scale(1.15) translateY(-5px)', boxShadow: '0 0 25px rgba(212, 175, 55, 0.9)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar to match the theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b061d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #635bff;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(15, 10, 36, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card-gold {
+            background: rgba(255, 215, 0, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        /* Page transition styles */
+        .page-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .page-view.active {
+            display: flex;
+            opacity: 1;
+        }
+        /* Cosmic tunnel warp overlay styling */
+        #warp-tunnel {
+            pointer-events: none;
+            transition: opacity 0.4s ease-in-out;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-cosmic-950 text-slate-100 font-sans overflow-x-hidden antialiased">
+
+    <!-- Ambient Sound System Button -->
+    <div id="audio-container" class="fixed bottom-6 right-6 z-50">
+        <button id="music-toggle-btn" onclick="toggleAtmosphereMusic()" class="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-cosmic-500 to-indigo-600 hover:from-indigo-600 hover:to-cosmic-500 text-white rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 border border-white/20">
+            <span id="music-icon" class="animate-bounce"><i class="fa-solid fa-music"></i></span>
+            <span id="music-text" class="text-xs font-semibold tracking-wider uppercase">Play Sweet Symphony</span>
+        </button>
+    </div>
+
+    <!-- Toast notification display for virtual interactions -->
+    <div id="toast-box" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 opacity-0 pointer-events-none scale-90">
+        <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-2 border border-white/20">
+            <span id="toast-icon">💝</span>
+            <span id="toast-message" class="font-medium text-sm"></span>
+        </div>
+    </div>
+
+    <!-- Warp Speed Space Tunnel Overlay effect during star travel -->
+    <div id="warp-tunnel" class="fixed inset-0 bg-black z-40 flex items-center justify-center opacity-0 pointer-events-none">
+        <div class="text-center">
+            <h2 class="text-xl md:text-3xl font-cursive text-gold-400 tracking-widest animate-pulse mb-2">Traversing the Cosmos...</h2>
+            <p class="text-xs text-slate-400 tracking-widest uppercase">Aligning coordinates to love</p>
+        </div>
+    </div>
+
+    <nav class="fixed top-0 left-0 w-full z-30 bg-cosmic-950/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center transition-all duration-300">
+        <div class="flex items-center gap-2">
+            <button onclick="navigateTo('celestial-sky')" class="font-cursive text-3xl text-gold-400 tracking-wide focus:outline-none">B <span class="text-pink-500">&hearts;</span> V</button>
+        </div>
+        
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-6 text-xs font-semibold tracking-wider uppercase text-slate-300">
+            <button onclick="navigateTo('celestial-sky')" id="nav-link-celestial-sky" class="hover:text-gold-400 text-gold-400 transition">Star Map</button>
+            <button onclick="navigateTo('counters')" id="nav-link-counters" class="hover:text-gold-400 transition">Our Milestones</button>
+            <button onclick="navigateTo('journey')" id="nav-link-journey" class="hover:text-gold-400 transition">Our Timeline</button>
+            <button onclick="navigateTo('why-i-love-you')" id="nav-link-why-i-love-you" class="hover:text-gold-400 transition">Why I Love You</button>
+            <button onclick="navigateTo('canada-dream')" id="nav-link-canada-dream" class="hover:text-gold-400 transition">Our Future</button>
+            <button onclick="navigateTo('love-quiz')" id="nav-link-love-quiz" class="hover:text-pink-400 text-pink-500 font-bold transition">Bubbu's Star 💖</button>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button onclick="toggleCustomizer()" class="text-xs font-semibold tracking-wide border border-gold-500/50 hover:bg-gold-500/10 text-gold-400 px-4 py-2 rounded-full transition duration-300">
+                <i class="fa-solid fa-gear mr-1"></i> Customizer
+            </button>
+            
+            <!-- Mobile Menu Toggle Button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-slate-200 text-xl focus:outline-none p-1" aria-label="Toggle Menu">
+                <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Sliding Menu Drawer -->
+    <div id="mobile-menu" class="fixed inset-y-0 left-0 w-64 bg-cosmic-950/95 backdrop-blur-lg border-r border-white/10 z-40 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col justify-between p-6">
+        <div class="flex flex-col gap-6 pt-20">
+            <span class="font-cursive text-3xl text-gold-400 border-b border-white/5 pb-4">B &hearts; V</span>
+            <button onclick="navigateTo('celestial-sky'); toggleMobileMenu()" class="text-left text-sm font-semibold tracking-wide uppercase text-slate-200 hover:text-gold-400 py-2"><i class="fa-solid fa-star text-gold-400 mr-2"></i> Star Map</button>
+            <button onclick="navigateTo('counters'); toggleMobileMenu()" class="text-left text-sm font-semibold tracking-wide uppercase text-slate-200 hover:text-gold-400 py-2"><i class="fa-solid fa-hourglass-half text-indigo-400 mr-2"></i> Our Milestones</button>
+            <button onclick="navigateTo('journey'); toggleMobileMenu()" class="text-left text-sm font-semibold tracking-wide uppercase text-slate-200 hover:text-gold-400 py-2"><i class="fa-solid fa-map text-gold-400 mr-2"></i> Our Timeline</button>
+            <button onclick="navigateTo('why-i-love-you'); toggleMobileMenu()" class="text-left text-sm font-semibold tracking-wide uppercase text-slate-200 hover:text-gold-400 py-2"><i class="fa-solid fa-heart text-pink-500 mr-2"></i> Why I Love You</button>
+            <button onclick="navigateTo('canada-dream'); toggleMobileMenu()" class="text-left text-sm font-semibold tracking-wide uppercase text-slate-200 hover:text-gold-400 py-2"><i class="fa-solid fa-paper-plane text-emerald-400 mr-2"></i> Our Future</button>
+            <button onclick="navigateTo('love-quiz'); toggleMobileMenu()" class="text-left text-sm font-semibold tracking-wide uppercase text-pink-400 font-bold py-2"><i class="fa-solid fa-sparkles mr-2"></i> Bubbu's Star 💖</button>
+        </div>
+        <div class="text-[10px] text-slate-500 border-t border-white/5 pt-4">
+            Forever & Always, Vaibhav
+        </div>
+    </div>
+    <!-- Mobile Menu Backdrop -->
+    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 z-30 hidden transition-opacity duration-300"></div>
+
+    <!-- PAGE 1: Home Celestial Star Sky Navigator -->
+    <section id="view-celestial-sky" class="page-view active relative min-h-screen flex flex-col justify-center items-center pt-16 pb-6 px-4 md:px-8 overflow-hidden">
+        <!-- Star Map Canvas Background -->
+        <div class="absolute inset-0 z-0">
+            <canvas id="star-map-canvas" class="w-full h-full block"></canvas>
+            <div class="absolute inset-0 bg-gradient-to-t from-cosmic-950 via-transparent to-cosmic-950/80 pointer-events-none"></div>
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-900/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow"></div>
+            <div class="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow" style="animation-delay: 2s;"></div>
+        </div>
+
+        <!-- Main Title and Star Instructions -->
+        <div class="relative z-10 max-w-4xl mx-auto text-center pointer-events-none px-2 mt-4">
+            <h1 class="text-4xl md:text-6xl font-cursive text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-pink-400 to-indigo-300 mb-4 drop-shadow-lg tracking-wide select-none leading-normal">
+                Happy Birthday, Babby!
+            </h1>
+            <p class="text-xs md:text-sm font-serif text-slate-300 mb-6 max-w-xl mx-auto leading-relaxed italic">
+                "The glowing stars represent our shared coordinates. Click below to see our special constellation or travel to different galaxies of our love."
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-3 justify-center items-center pointer-events-auto">
+                <button onclick="revealConstellation()" class="px-5 py-2.5 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-amber-600 hover:to-gold-500 text-cosmic-950 font-bold rounded-full shadow-lg hover:shadow-gold-500/20 transform hover:-translate-y-0.5 transition duration-300 text-xs">
+                    <i class="fa-solid fa-sparkles mr-1"></i> ✨ Connect Our Constellation
+                </button>
+                <button onclick="fireVirtualKiss()" class="px-5 py-2.5 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-full border border-white/20 backdrop-blur transform hover:-translate-y-0.5 transition duration-300 text-xs">
+                    <i class="fa-solid fa-heart text-pink-500 mr-1"></i> Send Vaibhav's Kiss 💋
+                </button>
+            </div>
+        </div>
+
+        <!-- Pulsing Cosmic Star Portals floating on screen -->
+        <div class="relative z-20 w-full max-w-4xl mx-auto mt-6 px-4">
+            <p class="text-center text-[10px] uppercase tracking-widest text-gold-400 mb-4 font-semibold animate-pulse">Select a cosmic star to travel</p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 justify-center">
+                <!-- Star 1 -->
+                <button onclick="navigateTo('counters')" class="flex flex-col items-center bg-cosmic-900/40 hover:bg-cosmic-800/60 p-3 rounded-xl border border-gold-500/20 hover:border-gold-500/80 transition-all duration-300 group">
+                    <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-md shadow-[0_0_15px_rgba(212,175,55,0.3)] animate-star-pulse group-hover:scale-110 transition duration-300">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <span class="text-[10px] font-serif font-bold text-slate-200 mt-2 group-hover:text-gold-400 transition text-center">Star of Milestones</span>
+                </button>
+                <!-- Star 2 -->
+                <button onclick="navigateTo('journey')" class="flex flex-col items-center bg-cosmic-900/40 hover:bg-cosmic-800/60 p-3 rounded-xl border border-gold-500/20 hover:border-gold-500/80 transition-all duration-300 group">
+                    <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-md shadow-[0_0_15px_rgba(212,175,55,0.3)] animate-star-pulse group-hover:scale-110 transition duration-300" style="animation-delay: 0.3s">
+                        <i class="fa-solid fa-map"></i>
+                    </div>
+                    <span class="text-[10px] font-serif font-bold text-slate-200 mt-2 group-hover:text-gold-400 transition text-center">Star of Our Story</span>
+                </button>
+                <!-- Star 3 -->
+                <button onclick="navigateTo('why-i-love-you')" class="flex flex-col items-center bg-cosmic-900/40 hover:bg-cosmic-800/60 p-3 rounded-xl border border-gold-500/20 hover:border-gold-500/80 transition-all duration-300 group">
+                    <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-md shadow-[0_0_15px_rgba(212,175,55,0.3)] animate-star-pulse group-hover:scale-110 transition duration-300" style="animation-delay: 0.6s">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <span class="text-[10px] font-serif font-bold text-slate-200 mt-2 group-hover:text-gold-400 transition text-center">Star of My Heart</span>
+                </button>
+                <!-- Star 4 -->
+                <button onclick="navigateTo('canada-dream')" class="flex flex-col items-center bg-cosmic-900/40 hover:bg-cosmic-800/60 p-3 rounded-xl border border-gold-500/20 hover:border-gold-500/80 transition-all duration-300 group">
+                    <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-md shadow-[0_0_15px_rgba(212,175,55,0.3)] animate-star-pulse group-hover:scale-110 transition duration-300" style="animation-delay: 0.9s">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <span class="text-[10px] font-serif font-bold text-slate-200 mt-2 group-hover:text-gold-400 transition text-center">Star of Our Destiny</span>
+                </button>
+                <!-- Star 5 - Love Quiz Game Portal -->
+                <button onclick="navigateTo('love-quiz')" class="col-span-2 md:col-span-1 flex flex-col items-center bg-pink-950/25 hover:bg-pink-950/40 p-3 rounded-xl border border-pink-500/20 hover:border-pink-500/80 transition-all duration-300 group">
+                    <div class="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400 text-md shadow-[0_0_15px_rgba(236,72,153,0.3)] animate-star-pulse group-hover:scale-110 transition duration-300" style="animation-delay: 1.2s">
+                        <i class="fa-solid fa-sparkles text-pink-400"></i>
+                    </div>
+                    <span class="text-[10px] font-serif font-bold text-pink-300 mt-2 group-hover:text-pink-400 transition text-center">Secret Cosmic Star 💖</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 2: Counters view -->
+    <section id="view-counters" class="page-view relative min-h-screen pt-20 pb-6 bg-gradient-to-b from-cosmic-950 to-indigo-950/40 px-4 md:px-8 border-t border-white/5 flex flex-col justify-center items-center">
+        <div class="max-w-5xl w-full mx-auto">
+            <div class="text-center mb-4">
+                <button onclick="navigateTo('celestial-sky')" class="mb-2 inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold-400 border border-gold-500/30 hover:bg-gold-500/10 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Cosmic Sky 🌌
+                </button>
+                <h2 class="text-xl md:text-3xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-300 font-bold mb-1">Every Second Spent Loving You</h2>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-gold-500 to-pink-500 mx-auto rounded-full mb-1"></div>
+                <p class="text-slate-400 text-[11px]">Calculated precisely across space and time</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Counter 1: Since We First Met -->
+                <div class="glass-card-gold rounded-2xl p-4 md:p-6 text-center transition-all duration-300 hover:border-gold-500/40 transform hover:-translate-y-0.5">
+                    <div class="w-10 h-10 bg-gold-500/10 rounded-xl flex items-center justify-center mx-auto mb-2 text-gold-400 text-md">
+                        <i class="fa-solid fa-meteor"></i>
+                    </div>
+                    <span class="text-[9px] uppercase tracking-widest text-gold-400 font-bold">Since We First Met</span>
+                    <h3 class="text-xs font-semibold text-slate-300 mt-0.5 mb-2">August 14, 2021</h3>
+                    
+                    <div class="grid grid-cols-4 gap-2">
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="met-days" class="text-md md:text-2xl font-bold text-gold-400">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Days</span>
+                        </div>
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="met-hours" class="text-md md:text-2xl font-bold text-slate-100">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Hours</span>
+                        </div>
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="met-mins" class="text-md md:text-2xl font-bold text-slate-100">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Mins</span>
+                        </div>
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="met-secs" class="text-md md:text-2xl font-bold text-pink-500">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Secs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Counter 2: Since We Married -->
+                <div class="glass-card-gold rounded-2xl p-4 md:p-6 text-center transition-all duration-300 hover:border-gold-500/40 transform hover:-translate-y-0.5">
+                    <div class="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center mx-auto mb-2 text-pink-400 text-md">
+                        <i class="fa-solid fa-ring"></i>
+                    </div>
+                    <span class="text-[9px] uppercase tracking-widest text-pink-400 font-bold">Since We Said "I Do"</span>
+                    <h3 class="text-xs font-semibold text-slate-300 mt-0.5 mb-2">November 26, 2023</h3>
+                    
+                    <div class="grid grid-cols-4 gap-2">
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="married-days" class="text-md md:text-2xl font-bold text-pink-400">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Days</span>
+                        </div>
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="married-hours" class="text-md md:text-2xl font-bold text-slate-100">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Hours</span>
+                        </div>
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="married-mins" class="text-md md:text-2xl font-bold text-slate-100">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Mins</span>
+                        </div>
+                        <div class="bg-cosmic-900/60 p-2 rounded-xl border border-white/5">
+                            <span id="married-secs" class="text-md md:text-2xl font-bold text-gold-400">00</span>
+                            <span class="block text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Secs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 3: Timeline view (Interactive Storybook / Slider to eliminate scrolling) -->
+    <section id="view-journey" class="page-view relative min-h-screen pt-20 pb-6 bg-cosmic-950 px-4 md:px-8 flex flex-col justify-center items-center">
+        <div class="max-w-4xl w-full mx-auto">
+            <div class="text-center mb-3">
+                <button onclick="navigateTo('celestial-sky')" class="mb-2 inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold-400 border border-gold-500/30 hover:bg-gold-500/10 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Cosmic Sky 🌌
+                </button>
+                <h2 class="text-xl md:text-3xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-gold-200 to-slate-200 font-bold mb-1">Our Cosmic Timeline</h2>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-gold-500 to-pink-500 mx-auto rounded-full mb-1"></div>
+                <p class="text-slate-400 text-[11px]">Explore our shared galaxy chapter by chapter</p>
+            </div>
+
+            <!-- Horizontal Chapter Navigation Progress Dot Bar -->
+            <div class="flex items-center justify-between max-w-xl mx-auto mb-4 bg-cosmic-900/60 p-2 rounded-full border border-white/5 overflow-x-auto whitespace-nowrap">
+                <button onclick="jumpToChapter(1)" id="chapter-dot-1" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 bg-gold-500 text-cosmic-950 shadow">Ch 1</button>
+                <button onclick="jumpToChapter(2)" id="chapter-dot-2" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 2</button>
+                <button onclick="jumpToChapter(3)" id="chapter-dot-3" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 3</button>
+                <button onclick="jumpToChapter(4)" id="chapter-dot-4" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 4</button>
+                <button onclick="jumpToChapter(5)" id="chapter-dot-5" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 5</button>
+                <button onclick="jumpToChapter(6)" id="chapter-dot-6" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 6</button>
+                <button onclick="jumpToChapter(7)" id="chapter-dot-7" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 7</button>
+                <button onclick="jumpToChapter(8)" id="chapter-dot-8" class="px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400">Ch 8</button>
+            </div>
+
+            <!-- Single Content Card container representing the current active chapter -->
+            <div class="glass-card rounded-2xl p-4 md:p-6 transition-all duration-300 border-pink-500/20 max-w-3xl mx-auto shadow-xl">
+                <!-- Chapters Content State Storage (rendered via JS) -->
+                <div id="story-content-box" class="flex flex-col md:flex-row gap-4 items-center min-h-[220px]">
+                    <!-- JS fills content dynamically -->
+                </div>
+            </div>
+
+            <!-- Prev/Next Controls under the Storybook -->
+            <div class="flex items-center justify-between max-w-xs mx-auto mt-4">
+                <button onclick="prevChapter()" class="px-4 py-1.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-full text-xs font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-chevron-left"></i> Previous
+                </button>
+                <span id="chapter-counter-label" class="text-xs text-gold-400 font-bold uppercase tracking-wider">Chapter 1 of 8</span>
+                <button onclick="nextChapter()" class="px-4 py-1.5 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-amber-600 hover:to-gold-500 text-cosmic-950 rounded-full text-xs font-bold flex items-center gap-1 transition shadow-lg">
+                    Next <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 4: Why I Love You view (Compact Interactive Carousel) -->
+    <section id="view-why-i-love-you" class="page-view relative min-h-screen pt-20 pb-6 bg-gradient-to-b from-cosmic-950 via-indigo-950/20 to-cosmic-950 px-4 md:px-8 border-t border-white/5 flex flex-col justify-center items-center">
+        <div class="max-w-3xl w-full mx-auto">
+            <div class="text-center mb-3">
+                <button onclick="navigateTo('celestial-sky')" class="mb-2 inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold-400 border border-gold-500/30 hover:bg-gold-500/10 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Cosmic Sky 🌌
+                </button>
+                <h2 class="text-xl md:text-3xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-300 font-bold mb-1">Constellations of My Heart</h2>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-gold-500 to-pink-500 mx-auto rounded-full mb-1"></div>
+                <p class="text-slate-400 text-[11px]">These are the cosmic reasons that bind me to you forever</p>
+            </div>
+
+            <!-- Interactive Reason Slideshow Deck -->
+            <div class="relative glass-card rounded-2xl p-6 md:p-8 max-w-2xl mx-auto border border-gold-500/20 shadow-xl transition-all duration-300 min-h-[220px] flex flex-col justify-between">
+                
+                <!-- Slide Core Content Area -->
+                <div id="reason-slide-box" class="text-center flex flex-col items-center justify-center flex-grow py-2">
+                    <!-- JS renders core contents dynamically -->
+                </div>
+
+                <!-- Navigation Controls inside the card base -->
+                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-2">
+                    <button onclick="prevReason()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                    
+                    <!-- Progress Dots representing active love index -->
+                    <div class="flex items-center gap-1.5" id="reason-dots-container">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                    <button onclick="nextReason()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 5: Canada Dream view -->
+    <section id="view-canada-dream" class="page-view relative min-h-screen pt-20 pb-6 bg-gradient-to-t from-cosmic-950 to-indigo-950/40 px-4 md:px-8 overflow-hidden flex flex-col justify-center items-center">
+        <!-- Flying Plane animation container -->
+        <div class="absolute inset-0 pointer-events-none opacity-20">
+            <div id="virtual-plane" class="absolute top-1/3 left-[-100px] text-white text-3xl transition-transform duration-1000 ease-out">
+                <i class="fa-solid fa-plane-departure text-gold-400"></i>
+                <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold whitespace-nowrap mt-1">India ➔ Canada Flight</div>
+            </div>
+        </div>
+
+        <div class="max-w-3xl w-full mx-auto">
+            <div class="text-center mb-3">
+                <button onclick="navigateTo('celestial-sky')" class="mb-2 inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold-400 border border-gold-500/30 hover:bg-gold-500/10 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Cosmic Sky 🌌
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-5 md:p-8 relative z-10 border border-gold-500/20 shadow-xl max-w-2xl mx-auto">
+                <span class="text-[10px] uppercase tracking-widest text-gold-400 font-bold block mb-1 text-center">My Absolute Vow To You</span>
+                <h2 class="text-xl md:text-3xl font-serif text-center text-white mb-3">Building Our Shared Castle</h2>
+                
+                <div class="text-slate-300 text-[11px] md:text-sm leading-relaxed space-y-3 max-w-xl mx-auto text-center font-serif italic">
+                    <p>
+                        "Bhumi, you have wait-walked with me through thin & thick. You have believed in my potential when things were quiet, and held our bond tightly across the seas."
+                    </p>
+                    <p>
+                        "My current era is fully dedicated to acquiring that perfect field job here in Canada, creating a comfortable home, and sending you the ticket that unites us physically forever. I love you for what you are, as a real person, and I just love you a lotttttttttttt."
+                    </p>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button onclick="launchCanadaPlane()" class="px-5 py-3 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-500 text-white font-bold rounded-full shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 text-xs">
+                        ✈️ Trigger the India-Canada Flight of Love!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 6: Interactive Love Test/Quiz View -->
+    <section id="view-love-quiz" class="page-view relative min-h-screen pt-20 pb-6 bg-gradient-to-b from-cosmic-950 via-pink-950/10 to-cosmic-950 px-4 md:px-8 flex flex-col justify-center items-center overflow-hidden">
+        <div class="absolute inset-0 pointer-events-none opacity-20">
+            <!-- Decorative floating heart bubbles -->
+            <div class="absolute top-1/4 left-1/4 text-pink-500/20 text-6xl animate-pulse">💖</div>
+            <div class="absolute bottom-1/4 right-1/4 text-pink-500/20 text-8xl animate-pulse" style="animation-delay: 1.5s">💝</div>
+        </div>
+
+        <div class="max-w-xl w-full mx-auto relative z-10 mt-2">
+            <div class="text-center mb-3">
+                <button onclick="navigateTo('celestial-sky')" class="mb-2 inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold-400 border border-gold-500/30 hover:bg-gold-500/10 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Cosmic Sky 🌌
+                </button>
+            </div>
+
+            <!-- Quiz Card Container: MUST be relative with isolated inner padding to contain Nope within limits -->
+            <div id="quiz-card-container" class="relative glass-card rounded-2xl p-6 md:p-10 text-center border border-pink-500/30 shadow-[0_0_40px_rgba(236,72,153,0.15)] overflow-hidden transition-all duration-500 min-h-[300px] flex flex-col justify-center">
+                <div class="w-12 h-12 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-3 text-pink-500 text-xl animate-bounce">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+                
+                <h3 id="quiz-question" class="text-lg md:text-2xl font-serif font-bold text-slate-100 mb-2 leading-snug select-none">
+                    Do you love me too Bubbu!? 🥹💖 🫶🏻
+                </h3>
+                
+                <p id="quiz-subtext" class="text-slate-400 text-[11px] mb-6 leading-relaxed select-none">
+                    Be completely honest! Select one of the planetary responses below.
+                </p>
+
+                <!-- Responsive Buttons Area: Static parent wrapper ensures parent container handles absolute dimensions -->
+                <div class="min-h-[80px] flex gap-4 justify-center items-center">
+                    <!-- Yes Button -->
+                    <button id="btn-yes" onclick="selectYesOption()" class="px-6 py-2.5 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-rose-600 hover:to-pink-500 text-white font-bold rounded-xl shadow-xl hover:shadow-pink-500/30 transform hover:-translate-y-0.5 transition-all duration-300 z-10 text-xs">
+                        Yes, definitely! 😍
+                    </button>
+                    
+                    <!-- Runaway "Nope" Button -->
+                    <button id="btn-nope" class="px-6 py-2.5 bg-slate-800 hover:bg-red-950 border border-white/10 hover:border-red-500/50 text-slate-300 hover:text-white font-semibold rounded-xl transition-all duration-100 select-none cursor-pointer text-xs">
+                        Nope 😡
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Love Declaration Overlay (Hidden initially) -->
+            <div id="quiz-success-card" class="hidden glass-card rounded-2xl p-6 md:p-10 text-center border border-gold-500/40 shadow-[0_0_50px_rgba(212,175,55,0.25)] relative overflow-hidden transition-all duration-700 transform scale-90 opacity-0 min-h-[300px] flex flex-col justify-center">
+                <div class="w-14 h-14 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-3 text-gold-400 text-2xl animate-bounce">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                
+                <h3 class="text-xl md:text-3xl font-cursive font-bold text-gold-400 mb-2 tracking-wide leading-normal">
+                    yes!, I knew it my Love 💖
+                </h3>
+                
+                <p class="text-slate-200 font-serif italic text-xs md:text-md mb-4 max-w-sm mx-auto leading-relaxed">
+                    "I love you for what you are, as a real person, and I just love you a lotttttttttttt."
+                </p>
+
+                <div class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mb-4">
+                    💖 Signed with eternal devotion, Vaibhav 💖
+                </div>
+
+                <div class="flex justify-center">
+                    <button onclick="resetLoveQuiz()" class="px-5 py-1.5 border border-pink-500/50 hover:bg-pink-500/10 text-pink-400 text-[10px] uppercase tracking-wider font-semibold rounded-full transition">
+                        Ask Me Again ✨
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Customizer Drawer Panel -->
+    <div id="customizer-panel" class="fixed inset-y-0 right-0 w-full max-w-sm bg-cosmic-900 border-l border-white/10 z-50 transform translate-x-full transition-transform duration-500 ease-in-out p-5 shadow-2xl overflow-y-auto text-xs">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-md font-serif font-bold text-slate-100">Vaibhav's Customizer</h3>
+            <button onclick="toggleCustomizer()" class="text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        
+        <p class="text-[11px] text-slate-400 mb-4 leading-relaxed">
+            Hey Vaibhav! You can paste direct image URLs (from websites or free hosting like ImgBB, PostImages, or Imgur) into the boxes below. They will be saved to your device immediately and loaded whenever you or Bhumi open this browser!
+        </p>
+
+        <div class="space-y-3 font-semibold text-[11px]">
+            <div>
+                <label class="block text-slate-300 mb-1">First Meet Photo URL</label>
+                <input type="text" id="input-first-meet" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">Sweet Times Photo URL</label>
+                <input type="text" id="input-sweet-times" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">Engagement Photo URL</label>
+                <input type="text" id="input-engaged" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">Bachelors Days Photo URL</label>
+                <input type="text" id="input-bachelors" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">Wedding Photo URL</label>
+                <input type="text" id="input-married" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">To Canada Photo URL</label>
+                <input type="text" id="input-canada" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">Vacation/Reunion Photo URL</label>
+                <input type="text" id="input-reunion" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+            <div>
+                <label class="block text-slate-300 mb-1">Present Day Photo URL</label>
+                <input type="text" id="input-present" placeholder="https://..." class="w-full bg-cosmic-950 border border-white/10 rounded-lg p-2 text-slate-200">
+            </div>
+        </div>
+
+        <div class="mt-6 flex gap-2">
+            <button onclick="saveCustomPhotos()" class="flex-1 py-2.5 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-amber-600 hover:to-gold-500 text-cosmic-950 font-bold rounded-lg transition text-xs">
+                Apply Images ✨
+            </button>
+            <button onclick="clearCustomPhotos()" class="py-2.5 px-3 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-lg transition text-xs">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-cosmic-950 border-t border-white/5 py-6 px-6 text-center text-[10px] text-slate-500">
+        <div class="max-w-4xl mx-auto">
+            <p class="font-cursive text-xl text-gold-400 mb-2">You are my universe, Bhumi.</p>
+            <p class="mb-1">Crafted with infinite love by Vaibhav</p>
+            <p class="text-[9px] uppercase tracking-wider text-slate-600">Representing Nov 26, 2023 Celestial Sky Constellations</p>
+        </div>
+    </footer>
+
+    <script>
+        // Setup dates
+        const metDate = new Date("August 14, 2021 00:00:00").getTime();
+        const marriedDate = new Date("November 26, 2023 18:30:00").getTime(); 
+
+        // Photo state keys
+        const photoKeys = [
+            'first-meet', 'sweet-times', 'engaged', 'bachelors', 'married', 'canada', 'reunion', 'present'
+        ];
+
+        // Star Map Canvas Background Implementation
+        const canvas = document.getElementById('star-map-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let constellationDrawn = false;
+        let constellationProgress = 0;
+        let targetProgress = 0;
+        let warpSpeed = false;
+        let warpFactor = 1.0;
+
+        // Sound Synthesis State variables
+        let audioCtx = null;
+        let musicPlaying = false;
+        let sequenceInterval = null;
+
+        // Interactive Timeline State
+        let currentChapterIndex = 1;
+        const chaptersData = {
+            1: {
+                title: "Our First Meet",
+                tagline: "The Collision of Two Stars",
+                date: "August 14, 2021",
+                text: "The day our universes collided. We met for the very first time, completely unaware of the beautiful cosmos we were starting to build together. From those simple first words, our frequencies matched instantly.",
+                key: "first-meet"
+            },
+            2: {
+                title: "Our Beautiful Days",
+                tagline: "Nurturing Love",
+                date: "Sowing Seeds",
+                text: "Endless walks, silly jokes, deep secrets shared late into the night. We spent precious quality time learning each other's habits, laughter triggers, and unspoken dreams. We were slowly weaving our fates together.",
+                key: "sweet-times"
+            },
+            3: {
+                title: "Our Engagement",
+                tagline: "A Boundless Commitment",
+                date: "The Promise",
+                text: "With rings on our fingers and stars witnessing our pledge, we took our first official step to bind our futures. It was the moment we said: 'I am yours, and you are mine, across any coordinates of time.'",
+                key: "engaged"
+            },
+            4: {
+                title: "Studying Side-by-Side",
+                tagline: "Dreams & Degrees",
+                date: "Bachelors Days",
+                text: "Navigating through college books, lecture halls, exams, and stressful college submissions together. Having you in class and during study sessions turned mundane lectures into beautiful dates and stressful nights into comforting memories. We built a firm foundation for our future.",
+                key: "bachelors"
+            },
+            5: {
+                title: "Our Holy Union",
+                tagline: "Husband & Wife Forever",
+                date: "Nov 26, 2023",
+                text: "The most memorable day of our physical coordinates on Earth. Seven sacred vows, holy fire, blessings of family, and the starry cosmos watching over us. On November 26, 2023, you became my beautiful wife.",
+                key: "married"
+            },
+            6: {
+                title: "Long Distance Begins",
+                tagline: "Ocean & Borders Apart",
+                date: "The Distance",
+                text: "I made the flight to Canada to lay a path for us. Our physical presence became pixelated screens and different time zones. But our minds, whispers, and hearts remained connected every single second. The distance only validated that our love spans across continents.",
+                key: "canada"
+            },
+            7: {
+                title: "Vacation Reunion",
+                tagline: "A Beautiful Oasis",
+                date: "One Magical Month",
+                text: "Flying back to India to see you. One short but insanely magical month of sweet together-time. Holding your hand, laughing over real tea, sleeping next to each other. It was a beautiful reminder of why every bit of struggle is absolutely worth it.",
+                key: "reunion"
+            },
+            8: {
+                title: "Preparing Our Nest",
+                tagline: "The Waiting Bridge",
+                date: "Our Present Era",
+                text: "Back in Canada, grinding daily, and targeting that perfect field job. You have waited patiently for almost 3 years. That loyalty and belief are my absolute source of power. My only goal is to finish this bridge, end the distance, and bring you here to fly with me side-by-side forever.",
+                key: "present"
+            }
+        };
+
+        // Interactive Reasons State
+        let currentReasonIndex = 0;
+        const reasonsData = [
+            {
+                icon: "fa-heart-pulse",
+                color: "text-pink-500",
+                bgColor: "bg-pink-500/10",
+                title: "The Way You Care",
+                text: "Your care is pure, instinctive, and infinite. Even from thousands of miles away, your voice has the magical ability to heal my stress, remind me to eat, and cover my mind in warmth."
+            },
+            {
+                icon: "fa-shield-halved",
+                color: "text-indigo-400",
+                bgColor: "bg-indigo-500/10",
+                title: "Stronger Than Me In Every Way",
+                text: "Whenever things feel heavy, you are my mountain. Your emotional fortitude, bravery, and absolute resilience are unmatched. I find deep courage simply looking at you."
+            },
+            {
+                icon: "fa-hourglass-half",
+                color: "text-gold-400",
+                bgColor: "bg-gold-500/10",
+                title: "Your 3-Year Wait & Faith",
+                text: "Waiting for almost 3 years to join me in Canada is no joke. Your absolute, unwavering belief in me during this period represents pure devotion. I am eternally blessed by your trust."
+            },
+            {
+                icon: "fa-face-laugh-wink",
+                color: "text-amber-400",
+                bgColor: "bg-amber-500/10",
+                title: "The Laugh & Playful Teases",
+                text: "Your sweet laughter is literally my absolute favorite soundtrack in the entire galaxy. The way you pull my leg and playfully tease me melts away any heavy fog of stress instantly."
+            },
+            {
+                icon: "fa-comments",
+                color: "text-green-400",
+                bgColor: "bg-green-500/10",
+                title: "Our Same-Frequency Humor",
+                text: "We share the exact same level of crazy, dry, and ridiculous sense of humor. Nobody else understands the inside jokes we laugh at, making our little bubble beautifully exclusive."
+            },
+            {
+                icon: "fa-gem",
+                color: "text-red-400",
+                bgColor: "bg-red-500/10",
+                title: "Pure Honesty & Family Love",
+                text: "No filters, no fake makeup of personality—just real, raw, beautiful honesty. Seeing how deeply you love my family and respect values shows me what an absolute jewel of a person you are."
+            }
+        ];
+
+        // Handle viewport resize for high-density displays
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            generateStars();
+        }
+
+        // Generate mathematical simulation of the stars on November 26
+        function generateStars() {
+            stars = [];
+            const count = Math.floor((canvas.width * canvas.height) / 4000);
+            
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5 + 0.2,
+                    brightness: Math.random(),
+                    speed: 0.01 + Math.random() * 0.02,
+                    isConstellation: false
+                });
+            }
+
+            // Custom Constellation Nodes: VAIBHU alignment
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            const constellationCoords = [
+                { x: cx - 150, y: cy - 120, name: "V" },
+                { x: cx - 90, y: cy - 160, name: "A" },
+                { x: cx - 30, y: cy - 90, name: "I" },
+                { x: cx + 30, y: cy - 130, name: "B" },
+                { x: cx + 90, y: cy - 80, name: "H" },
+                { x: cx + 150, y: cy - 110, name: "U" }
+            ];
+
+            constellationCoords.forEach(coord => {
+                stars.push({
+                    x: coord.x,
+                    y: coord.y,
+                    size: 3.5,
+                    brightness: 1.0,
+                    speed: 0.005,
+                    isConstellation: true,
+                    name: coord.name
+                });
+            });
+        }
+
+        // Star Map Render loop with cosmic warping acceleration
+        function drawStarMap() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#05020c';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Accelerate warp speed animation if travelling
+            if (warpSpeed && warpFactor < 25) {
+                warpFactor += 0.5;
+            } else if (!warpSpeed && warpFactor > 1.0) {
+                warpFactor -= 0.5;
+            }
+
+            stars.forEach(star => {
+                // Adjust animation when warping
+                if (warpSpeed) {
+                    star.y += star.size * warpFactor;
+                    if (star.y > canvas.height) {
+                        star.y = 0;
+                        star.x = Math.random() * canvas.width;
+                    }
+                }
+
+                star.brightness += star.speed;
+                if (star.brightness > 1 || star.brightness < 0.2) {
+                    star.speed = -star.speed;
+                }
+                
+                ctx.fillStyle = star.isConstellation 
+                    ? `rgba(212, 175, 55, ${star.brightness})` 
+                    : `rgba(255, 255, 255, ${star.brightness})`;
+                
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size * (warpSpeed ? warpFactor * 0.25 : 1), 0, Math.PI * 2);
+                ctx.fill();
+
+                if (star.isConstellation && !warpSpeed) {
+                    // Vibrant gold outer glowing pulsing ring for VAIBHU star nodes
+                    ctx.shadowBlur = 25;
+                    ctx.shadowColor = '#e5c158';
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, 8, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(229, 193, 88, ${0.4 + star.brightness * 0.6})`;
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+
+                    // Bold, larger, highly visible letters
+                    ctx.fillStyle = '#fffbeb';
+                    ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#d4af37';
+                    ctx.fillText(star.name, star.x - 6, star.y - 16);
+                    ctx.shadowBlur = 0;
+                }
+            });
+
+            // Drawing constellation links
+            if (constellationProgress < targetProgress) {
+                constellationProgress += 0.015;
+            }
+
+            if (constellationProgress > 0 && !warpSpeed) {
+                const constStars = stars.filter(s => s.isConstellation);
+                ctx.beginPath();
+                // Solid, thick golden line with high glow
+                ctx.strokeStyle = `rgba(212, 175, 55, ${0.5 + constellationProgress * 0.5})`;
+                ctx.lineWidth = 3.5;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#d4af37';
+
+                for (let i = 0; i < constStars.length - 1; i++) {
+                    const progressX = constStars[i].x + (constStars[i+1].x - constStars[i].x) * constellationProgress;
+                    const progressY = constStars[i].y + (constStars[i+1].y - constStars[i].y) * constellationProgress;
+                    
+                    ctx.moveTo(constStars[i].x, constStars[i].y);
+                    ctx.lineTo(progressX, progressY);
+                }
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            requestAnimationFrame(drawStarMap);
+        }
+        // Star travel/page transition engine with cosmic tunnel animation
+        function navigateTo(pageId) {
+            const tunnel = document.getElementById('warp-tunnel');
+            
+            // Phase 1: Fire visual space-warp transition
+            warpSpeed = true;
+            tunnel.style.pointerEvents = 'auto';
+            tunnel.style.opacity = '1';
+            playSpaceSwoosh();
+
+            // Phase 2: Toggle view states while warp overlay is full-screen
+            setTimeout(() => {
+                document.querySelectorAll('.page-view').forEach(view => {
+                    view.classList.remove('active');
+                });
+                
+                const targetView = document.getElementById(`view-${pageId}`);
+                if (targetView) {
+                    targetView.classList.add('active');
+                    // Reset scroll window context instantly so she doesn't have to scroll down to see content!
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                }
+
+                // Update nav link active highlights
+                document.querySelectorAll('[id^="nav-link-"]').forEach(link => {
+                    link.classList.remove('text-gold-400');
+                });
+                const activeLink = document.getElementById(`nav-link-${pageId}`);
+                if (activeLink) {
+                    activeLink.classList.add('text-gold-400');
+                }
+            }, 400);
+
+            // Phase 3: Un-warp and transition to target view smoothly
+            setTimeout(() => {
+                warpSpeed = false;
+                tunnel.style.opacity = '0';
+                tunnel.style.pointerEvents = 'none';
+            }, 1000);
+        }
+
+        // Mobile Menu Drawer Handler
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            const icon = document.getElementById('mobile-menu-icon');
+
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                backdrop.classList.add('block');
+                icon.className = "fa-solid fa-xmark";
+            } else {
+                menu.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+                backdrop.classList.remove('block');
+                icon.className = "fa-solid fa-bars";
+            }
+        }
+
+        // Connect Constellation Tracing Trigger
+        function revealConstellation() {
+            targetProgress = 1.0;
+            playCelebrationMelody();
+            showToast("💫 The 'Vaibhu' Constellation has aligned across the galaxy!", "✨");
+        }
+
+        // Running Live Milestones Counter
+        function runCounters() {
+            setInterval(() => {
+                const now = new Date().getTime();
+                
+                const metDiff = now - metDate;
+                const mDays = Math.floor(metDiff / (1000 * 60 * 60 * 24));
+                const mHours = Math.floor((metDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mMins = Math.floor((metDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const mSecs = Math.floor((metDiff % (1000 * 60)) / 1000);
+
+                document.getElementById("met-days").textContent = mDays.toString().padStart(2, '0');
+                document.getElementById("met-hours").textContent = mHours.toString().padStart(2, '0');
+                document.getElementById("met-mins").textContent = mMins.toString().padStart(2, '0');
+                document.getElementById("met-secs").textContent = mSecs.toString().padStart(2, '0');
+
+                const marriedDiff = now - marriedDate;
+                const marDays = Math.floor(marriedDiff / (1000 * 60 * 60 * 24));
+                const marHours = Math.floor((marriedDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const marMins = Math.floor((marriedDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const marSecs = Math.floor((marriedDiff % (1000 * 60)) / 1000);
+
+                document.getElementById("married-days").textContent = marDays.toString().padStart(2, '0');
+                document.getElementById("married-hours").textContent = marHours.toString().padStart(2, '0');
+                document.getElementById("married-mins").textContent = marMins.toString().padStart(2, '0');
+                document.getElementById("married-secs").textContent = marSecs.toString().padStart(2, '0');
+
+            }, 1000);
+        }
+
+        // Custom Toast Notifications
+        function showToast(message, icon) {
+            const toast = document.getElementById("toast-box");
+            document.getElementById("toast-icon").textContent = icon;
+            document.getElementById("toast-message").textContent = message;
+            
+            toast.classList.remove("opacity-0", "scale-90", "pointer-events-none");
+            toast.classList.add("opacity-100", "scale-100");
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-100", "scale-100");
+                toast.classList.add("opacity-0", "scale-90", "pointer-events-none");
+            }, 3500);
+        }
+
+        // Render Chapter Content based on active state
+        function renderStorybookChapter() {
+            const data = chaptersData[currentChapterIndex];
+            const contentBox = document.getElementById('story-content-box');
+            
+            // Highlight current active tab
+            for (let i = 1; i <= 8; i++) {
+                const tab = document.getElementById(`chapter-dot-${i}`);
+                if (tab) {
+                    if (i === currentChapterIndex) {
+                        tab.className = "px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 bg-gold-500 text-cosmic-950 shadow";
+                    } else {
+                        tab.className = "px-2.5 py-1 text-[9px] font-bold rounded-full transition-all duration-300 hover:text-gold-400 text-slate-400";
+                    }
+                }
+            }
+
+            // Update Counter Label
+            document.getElementById('chapter-counter-label').textContent = `Chapter ${currentChapterIndex} of 8`;
+
+            // Pull direct image from customizer local store or fallback
+            const storedImg = localStorage.getItem(`custom-img-${data.key}`);
+            const defaultImg = `https://placehold.co/600x450/1a1235/d4af37?text=${encodeURIComponent(data.title)}`;
+            const imgSrc = storedImg ? storedImg : defaultImg;
+
+            contentBox.innerHTML = `
+                <div class="w-full md:w-1/2 flex flex-col justify-center order-2 md:order-1 text-left">
+                    <span class="text-[9px] uppercase tracking-widest text-pink-400 font-bold block">${data.tagline}</span>
+                    <h3 class="text-md md:text-lg font-serif font-bold text-slate-100 mt-0.5 leading-snug">${data.title}</h3>
+                    <span class="text-[10px] text-gold-400 font-semibold uppercase tracking-wider block mb-1.5">${data.date}</span>
+                    <p class="text-slate-300 text-[11px] leading-relaxed">${data.text}</p>
+                </div>
+                <div class="w-full md:w-1/2 order-1 md:order-2">
+                    <div class="relative rounded-xl overflow-hidden aspect-[16/10] bg-cosmic-900 border border-white/10 shadow-md">
+                        <img src="${imgSrc}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" alt="${data.title}">
+                    </div>
+                </div>
+            `;
+        }
+
+        function jumpToChapter(index) {
+            currentChapterIndex = index;
+            renderStorybookChapter();
+            playBubblePop();
+        }
+
+        function prevChapter() {
+            currentChapterIndex = currentChapterIndex > 1 ? currentChapterIndex - 1 : 8;
+            renderStorybookChapter();
+            playBubblePop();
+        }
+
+        function nextChapter() {
+            currentChapterIndex = currentChapterIndex < 8 ? currentChapterIndex + 1 : 1;
+            renderStorybookChapter();
+            playBubblePop();
+        }
+
+        // Render Active Love reason content
+        function renderReasonSlide() {
+            const data = reasonsData[currentReasonIndex];
+            const slideBox = document.getElementById('reason-slide-box');
+            const dotsContainer = document.getElementById('reason-dots-container');
+
+            slideBox.innerHTML = `
+                <div class="w-10 h-10 ${data.bgColor} rounded-xl flex items-center justify-center ${data.color} text-lg mb-3 animate-float">
+                    <i class="fa-solid ${data.icon}"></i>
+                </div>
+                <h3 class="text-md font-serif font-bold text-slate-100 mb-1.5">${data.title}</h3>
+                <p class="text-slate-300 text-[11px] leading-relaxed max-w-md mx-auto">${data.text}</p>
+            `;
+
+            // Draw progress index indicators
+            dotsContainer.innerHTML = '';
+            reasonsData.forEach((_, idx) => {
+                const active = idx === currentReasonIndex;
+                const dot = document.createElement('div');
+                dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${active ? 'bg-gold-400 scale-125' : 'bg-slate-600'}`;
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function prevReason() {
+            currentReasonIndex = currentReasonIndex > 0 ? currentReasonIndex - 1 : reasonsData.length - 1;
+            renderReasonSlide();
+            playBubblePop();
+        }
+
+        function nextReason() {
+            currentReasonIndex = currentReasonIndex < reasonsData.length - 1 ? currentReasonIndex + 1 : 0;
+            renderReasonSlide();
+            playBubblePop();
+        }
+
+        // CONSTRAINED RUNAWAY BUTTON LOGIC FOR "NOPE" OPTION
+        const nopeBtn = document.getElementById('btn-nope');
+        const yesBtn = document.getElementById('btn-yes');
+        const quizCard = document.getElementById('quiz-card-container');
+
+        function runawayNopeButton(e) {
+            // Remove any potential relative wrapper constraints inside the button row
+            nopeBtn.parentElement.classList.remove('relative');
+
+            quizCard.style.position = 'relative';
+            nopeBtn.style.position = 'absolute';
+
+            const containerWidth = quizCard.clientWidth;
+            const containerHeight = quizCard.clientHeight;
+            const btnWidth = nopeBtn.offsetWidth;
+            const btnHeight = nopeBtn.offsetHeight;
+            
+            // Set margins safely to ensure button NEVER goes outside the visible rounded card border
+            const marginX = 24;
+            const marginY = 24;
+            
+            const minX = marginX;
+            const minY = marginY;
+            const maxX = containerWidth - btnWidth - marginX;
+            const maxY = containerHeight - btnHeight - marginY;
+            
+            let newLeft, newTop;
+            let attempts = 0;
+            
+            // Calculate a random absolute spot inside the card, avoiding Yes button overlaps
+            do {
+                newLeft = minX + Math.random() * (maxX - minX);
+                newTop = minY + Math.random() * (maxY - minY);
+                attempts++;
+            } while (attempts < 20 && isOverlappingYes(newLeft, newTop));
+            
+            nopeBtn.style.left = `${newLeft}px`;
+            nopeBtn.style.top = `${newTop}px`;
+            
+            playBubblePop();
+            showToast("The 'Nope' button slipped away! 😉", "💨");
+        }
+
+        function isOverlappingYes(left, top) {
+            const containerRect = quizCard.getBoundingClientRect();
+            const yesRect = yesBtn.getBoundingClientRect();
+            
+            const yesLeft = yesRect.left - containerRect.left;
+            const yesTop = yesRect.top - containerRect.top;
+            
+            const dist = Math.hypot(left - yesLeft, top - yesTop);
+            return dist < 100; // Keep a generous distance of 100px so buttons never touch
+        }
+
+        // Desktop mouseovers
+        nopeBtn.addEventListener('mouseover', runawayNopeButton);
+        // Mobile touch triggers
+        nopeBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault(); // Stop default navigation zoom/click triggers
+            runawayNopeButton(e);
+        });
+
+        // Yes Button interaction logic
+        function selectYesOption() {
+            // Play a magical triumph chord sequence
+            playCelebrationMelody();
+
+            // Trigger beautiful romantic success elements
+            const quizContainer = document.getElementById('quiz-card-container');
+            const successCard = document.getElementById('quiz-success-card');
+
+            // Hide old card with slick animations
+            quizContainer.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                quizContainer.classList.add('hidden');
+                
+                // Show new card
+                successCard.classList.remove('hidden');
+                setTimeout(() => {
+                    successCard.classList.remove('opacity-0', 'scale-90');
+                    successCard.classList.add('opacity-100', 'scale-100');
+                }, 50);
+            }, 400);
+
+            // Sparkle love bubbles on screen
+            fireVirtualKiss();
+        }
+
+        // Reset game state
+        function resetLoveQuiz() {
+            const quizContainer = document.getElementById('quiz-card-container');
+            const successCard = document.getElementById('quiz-success-card');
+
+            successCard.classList.add('opacity-0', 'scale-90');
+            setTimeout(() => {
+                successCard.classList.add('hidden');
+                
+                // Return Nope button home safely
+                nopeBtn.style.position = 'static';
+                nopeBtn.style.left = 'auto';
+                nopeBtn.style.top = 'auto';
+
+                quizContainer.classList.remove('hidden');
+                setTimeout(() => {
+                    quizContainer.classList.remove('opacity-0', 'scale-95');
+                    quizContainer.classList.add('opacity-100', 'scale-100');
+                }, 50);
+            }, 400);
+        }
+
+        // Virtual kiss shower
+        function fireVirtualKiss() {
+            showToast("Vaibhav has sent 100 virtual kisses across the Canada-India bridge! 💋", "💖");
+            
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement("div");
+                bubble.className = "fixed text-pink-500 pointer-events-none z-50 text-xl animate-pulse";
+                bubble.innerHTML = ["💖", "❤️", "🌹", "💋", "🍿"][Math.floor(Math.random() * 5)];
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.bottom = `-50px`;
+                bubble.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
+                bubble.style.transition = `all ${Math.random() * 3 + 2}s cubic-bezier(0.1, 0.8, 0.3, 1)`;
+                
+                document.body.appendChild(bubble);
+
+                setTimeout(() => {
+                    bubble.style.bottom = `120vh`;
+                    bubble.style.opacity = `0`;
+                }, 50);
+
+                setTimeout(() => bubble.remove(), 5000);
+            }
+        }
+
+        // Canada flight path animation
+        function launchCanadaPlane() {
+            const plane = document.getElementById("virtual-plane");
+            plane.style.transform = `translate(${window.innerWidth + 200}px, -150px) scale(1.3)`;
+            showToast("Flight of Promises initiated: Sowing the seeds for Bhumi to come to Canada! ✈️🍁", "🍁");
+
+            setTimeout(() => {
+                plane.style.transition = "none";
+                plane.style.transform = "translate(0px, 0px) scale(1.0)";
+                setTimeout(() => {
+                    plane.style.transition = "transform 4s ease-in-out";
+                }, 100);
+            }, 5000);
+        }
+
+        // Customizer Controls Drawer
+        function toggleCustomizer() {
+            const panel = document.getElementById("customizer-panel");
+            if (panel.classList.contains("translate-x-full")) {
+                panel.classList.remove("translate-x-full");
+                photoKeys.forEach(key => {
+                    const val = localStorage.getItem(`custom-img-${key}`) || '';
+                    document.getElementById(`input-${key}`).value = val;
+                });
+            } else {
+                panel.classList.add("translate-x-full");
+            }
+        }
+
+        function saveCustomPhotos() {
+            photoKeys.forEach(key => {
+                const val = document.getElementById(`input-${key}`).value.trim();
+                if (val) {
+                    localStorage.setItem(`custom-img-${key}`, val);
+                } else {
+                    localStorage.removeItem(`custom-img-${key}`);
+                }
+            });
+            renderStorybookChapter();
+            toggleCustomizer();
+            showToast("Images uploaded successfully! Your magical memory book has updated.", "📸");
+        }
+
+        function clearCustomPhotos() {
+            photoKeys.forEach(key => {
+                localStorage.removeItem(`custom-img-${key}`);
+                document.getElementById(`input-${key}`).value = '';
+            });
+            renderStorybookChapter();
+            toggleCustomizer();
+            showToast("Memory Book restored to romantic presets.", "✨");
+        }
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function toggleAtmosphereMusic() {
+            initAudio();
+            if (musicPlaying) {
+                stopAtmosphereMusic();
+                return;
+            }
+            
+            playSymphonySequence();
+            musicPlaying = true;
+            document.getElementById("music-icon").classList.add("animate-spin");
+            document.getElementById("music-text").textContent = "Pause Melody";
+            showToast("Soft Cosmic Symphony Synth initialized...", "🎵");
+        }
+
+        function playSymphonySequence() {
+            const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 293.66, 349.23, 440.00, 587.33, 440.00, 349.23];
+            let index = 0;
+
+            sequenceInterval = setInterval(() => {
+                if (!audioCtx) return;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(notes[index], audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.8);
+
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 2.0);
+
+                index = (index + 1) % notes.length;
+            }, 1000);
+        }
+
+        function stopAtmosphereMusic() {
+            if (sequenceInterval) {
+                clearInterval(sequenceInterval);
+            }
+            musicPlaying = false;
+            document.getElementById("music-icon").classList.remove("animate-spin");
+            document.getElementById("music-text").textContent = "Play Sweet Symphony";
+            showToast("Cosmic Synth paused.", "⏸️");
+        }
+
+        // Micro Sound Effects
+        function playBubblePop() {
+            initAudio();
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
+            
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+
+        function playSpaceSwoosh() {
+            initAudio();
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.5);
+            
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.6);
+        }
+
+        function playCelebrationMelody() {
+            initAudio();
+            if (!audioCtx) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // Beautiful C Major Arpeggio chord
+            notes.forEach((freq, i) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.9);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.9);
+                }, i * 150);
+            });
+        }
+
+        // Window Init configurations
+        window.onload = function() {
+            resizeCanvas();
+            drawStarMap();
+            runCounters();
+            renderStorybookChapter();
+            renderReasonSlide();
+            
+            window.addEventListener('resize', resizeCanvas);
+        };
+    </script>
+</body>
+</html>
